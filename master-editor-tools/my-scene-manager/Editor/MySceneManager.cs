@@ -178,56 +178,65 @@ public class MySceneManager : EditorWindow
         if (isEditModeOpen)
             return;
         string folderName = Application.dataPath + "/Scenes";
-        try
+        
+        if (Directory.Exists(Application.dataPath+"/Scenes"))
         {
-            var dirInfo = new DirectoryInfo(folderName);
-            var allFileInfos = dirInfo.GetFiles("*.unity", SearchOption.AllDirectories);
+            try
+            {
+                var dirInfo = new DirectoryInfo(folderName);
+                var allFileInfos = dirInfo.GetFiles("*.unity", SearchOption.AllDirectories);
 
-            sceneData.Clear();
-            editModesOfScenes.Clear();
-            newNames.Clear();
-            foreach (var fileInfo in allFileInfos)
-            {
-                EditorSceneClass tempData = new EditorSceneClass();
-                tempData.sceneName = getSceneName(fileInfo.Name);
-                //string[] newStringCOl = fileInfo.DirectoryName.Split(new String[] { "/Scenes/" }, StringSplitOptions.None);
-                tempData.scenePath = fileInfo.DirectoryName;
-                tempData.isAddedToBuildSettings = false;
-                sceneData.Add(tempData);
-                editModesOfScenes.Add(false);
-                newNames.Add("0");
-            }
-         //   try
-        //    {
-        //        sceneData.Sort();
-        //    }
-        //    catch (System.Exception ex)
-        //    {
-         //       Debug.Log(ex);
-        //    }
-
-            buildSettingsSceneNames.Clear();
-            for (int count = 0; count < EditorBuildSettings.scenes.Length; count++)
-            {
-                string tempNamSSS = EditorBuildSettings.scenes[count].path;
-                string[] newStringCOl = tempNamSSS.Split('/');
-                buildSettingsSceneNames.Add(getSceneName(newStringCOl[newStringCOl.Length - 1]));
-            }
-            for (int sceneCount = 0; sceneCount < sceneData.Count; sceneCount++)
-            {
-                for (int count = 0; count < buildSettingsSceneNames.Count; count++)
+                sceneData.Clear();
+                editModesOfScenes.Clear();
+                newNames.Clear();
+                foreach (var fileInfo in allFileInfos)
                 {
-                    if (sceneData[sceneCount].sceneName.Equals(buildSettingsSceneNames[count]))
+                    EditorSceneClass tempData = new EditorSceneClass();
+                    tempData.sceneName = getSceneName(fileInfo.Name);
+                    //string[] newStringCOl = fileInfo.DirectoryName.Split(new String[] { "/Scenes/" }, StringSplitOptions.None);
+                    tempData.scenePath = fileInfo.DirectoryName;
+                    tempData.isAddedToBuildSettings = false;
+                    sceneData.Add(tempData);
+                    editModesOfScenes.Add(false);
+                    newNames.Add("0");
+                }
+                //   try
+                //    {
+                //        sceneData.Sort();
+                //    }
+                //    catch (System.Exception ex)
+                //    {
+                //       Debug.Log(ex);
+                //    }
+
+                buildSettingsSceneNames.Clear();
+                for (int count = 0; count < EditorBuildSettings.scenes.Length; count++)
+                {
+                    string tempNamSSS = EditorBuildSettings.scenes[count].path;
+                    string[] newStringCOl = tempNamSSS.Split('/');
+                    buildSettingsSceneNames.Add(getSceneName(newStringCOl[newStringCOl.Length - 1]));
+                }
+                for (int sceneCount = 0; sceneCount < sceneData.Count; sceneCount++)
+                {
+                    for (int count = 0; count < buildSettingsSceneNames.Count; count++)
                     {
-                        sceneData[sceneCount].isAddedToBuildSettings = true;
+                        if (sceneData[sceneCount].sceneName.Equals(buildSettingsSceneNames[count]))
+                        {
+                            sceneData[sceneCount].isAddedToBuildSettings = true;
+                        }
                     }
                 }
             }
+            catch (System.Exception ex)
+            {
+                Debug.LogWarning(ex);
+            }
         }
-        catch (System.Exception ex)
+        else
         {
-            Debug.Log(ex);
+            sceneData.Clear();
         }
+       
     }
 
 
