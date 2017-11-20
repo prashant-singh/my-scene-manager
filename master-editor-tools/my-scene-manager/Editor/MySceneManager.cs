@@ -41,7 +41,7 @@ public class MySceneManager : EditorWindow
 
 
     GUIStyle styleHelpboxInner;
-    GUIStyle titleLabel, editorAddedButtonStyle, normalButtonStyle;
+    GUIStyle titleLabel, editorAddedButtonStyle, normalButtonStyle, helpButtonStyle;
     Texture editButtonIcon, saveButtonIcon;
     void InitStyles()
     {
@@ -53,6 +53,12 @@ public class MySceneManager : EditorWindow
         titleLabel.normal.textColor = Color.white;
         titleLabel.alignment = TextAnchor.UpperCenter;
         titleLabel.fixedHeight = 15;
+
+        helpButtonStyle = new GUIStyle(GUI.skin.button);
+        helpButtonStyle.fontSize = 10;
+        helpButtonStyle.fontStyle = FontStyle.Bold;
+        helpButtonStyle.normal.textColor = Color.white;
+        helpButtonStyle.alignment = TextAnchor.MiddleCenter;
 
         editorAddedButtonStyle = new GUIStyle(GUI.skin.button);
         editorAddedButtonStyle.alignment = TextAnchor.MiddleLeft;
@@ -77,6 +83,10 @@ public class MySceneManager : EditorWindow
         GUILayout.BeginHorizontal(styleHelpboxInner);
         GUILayout.FlexibleSpace();
         GUILayout.Label("All scenes that are in the Scenes folder", titleLabel);
+        if (GUILayout.Button(new GUIContent("?", "Shoot me an email about the issue or suggestions"), helpButtonStyle, GUILayout.MaxWidth(20), GUILayout.MaxHeight(20)))
+        {
+            Application.OpenURL("https://github.com/prashant-singh");
+        }
         GUILayout.FlexibleSpace();
         GUILayout.EndHorizontal();
         GUILayout.BeginVertical(styleHelpboxInner);
