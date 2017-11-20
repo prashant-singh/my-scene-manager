@@ -2,261 +2,263 @@
 using UnityEditor;
 using System.IO;
 using System.Collections.Generic;
-using System;
 #if UNITY_5_3 || UNITY_2017
     using UnityEditor.SceneManagement;
 #endif
 
-public class EditorSceneClass
+namespace myEditorScripts
 {
-    public string sceneName;
-    public bool isAddedToBuildSettings;
-    public string scenePath;
-}
-
-
-public class MySceneManager : EditorWindow
-{
-
-    [MenuItem("[Master_Tools]/Scene Manager")]
-    static void Init()
+    public class EditorSceneClass
     {
-
-        GetWindow(typeof(MySceneManager));
-        GetWindow(typeof(MySceneManager)).minSize = new Vector2(250, 200);
-        GetWindow(typeof(MySceneManager)).titleContent = new GUIContent("All Scenes v0.2");
-    }
-    public MySceneManager()
-    {
-        sceneData = new List<EditorSceneClass>();
-        buildSettingsSceneNames = new List<string>();
-        editModesOfScenes = new List<bool>();
-        newNames = new List<string>();
-    }
-
-    void Awake()
-    {
-
+        public string sceneName;
+        public bool isAddedToBuildSettings;
+        public string scenePath;
     }
 
 
-    GUIStyle styleHelpboxInner;
-    GUIStyle titleLabel, editorAddedButtonStyle, normalButtonStyle, helpButtonStyle;
-    Texture editButtonIcon, saveButtonIcon;
-    void InitStyles()
+    public class MySceneManager : EditorWindow
     {
-        styleHelpboxInner = new GUIStyle("HelpBox");
-        styleHelpboxInner.padding = new RectOffset(6, 6, 6, 6);
 
-        titleLabel = new GUIStyle();
-        titleLabel.fontSize = 10;
-        titleLabel.normal.textColor = Color.white;
-        titleLabel.alignment = TextAnchor.UpperCenter;
-        titleLabel.fixedHeight = 15;
-
-        helpButtonStyle = new GUIStyle(GUI.skin.button);
-        helpButtonStyle.fontSize = 10;
-        helpButtonStyle.fontStyle = FontStyle.Bold;
-        helpButtonStyle.normal.textColor = Color.white;
-        helpButtonStyle.alignment = TextAnchor.MiddleCenter;
-
-        editorAddedButtonStyle = new GUIStyle(GUI.skin.button);
-        editorAddedButtonStyle.alignment = TextAnchor.MiddleLeft;
-        editorAddedButtonStyle.normal.textColor = Color.yellow;
-
-        normalButtonStyle = new GUIStyle(GUI.skin.button);
-        normalButtonStyle.alignment = TextAnchor.MiddleLeft;
-
-    }
-    Vector2 scrollPos;
-    List<EditorSceneClass> sceneData;
-    List<string> buildSettingsSceneNames;
-    List<bool> editModesOfScenes;
-    List<string> newNames;
-    bool isEditModeOpen = false;
-    void OnGUI()
-    {
-        InitStyles();
-        styleHelpboxInner = new GUIStyle("HelpBox");
-        styleHelpboxInner.padding = new RectOffset(6, 6, 6, 6);
-        scrollPos = EditorGUILayout.BeginScrollView(scrollPos, false, false, GUILayout.Width(position.width), GUILayout.Height(position.height));
-        GUILayout.BeginHorizontal(styleHelpboxInner);
-        GUILayout.FlexibleSpace();
-        GUILayout.Label("All scenes that are in the Scenes folder", titleLabel);
-        if (GUILayout.Button(new GUIContent("?", "Shoot me an email about the issue or suggestions"), helpButtonStyle, GUILayout.MaxWidth(20), GUILayout.MaxHeight(20)))
+        [MenuItem("[Master_Tools]/Scene Manager")]
+        static void Init()
         {
-            Application.OpenURL("https://github.com/prashant-singh");
-        }
-        GUILayout.FlexibleSpace();
-        GUILayout.EndHorizontal();
-        GUILayout.BeginVertical(styleHelpboxInner);
-        GetSceneNames();
-        if (sceneData.Count == 0)
-            GUILayout.Label("No scenes in the Scenes folder.", titleLabel);
-        else
-            for (int count = 0; count < sceneData.Count; count++)
-            {
-                GUILayout.BeginHorizontal();
-                GUILayout.FlexibleSpace();
 
-                if (!editModesOfScenes[count])
+            GetWindow(typeof(MySceneManager));
+            GetWindow(typeof(MySceneManager)).minSize = new Vector2(250, 200);
+            GetWindow(typeof(MySceneManager)).titleContent = new GUIContent("All Scenes v0.2");
+        }
+        public MySceneManager()
+        {
+            sceneData = new List<EditorSceneClass>();
+            buildSettingsSceneNames = new List<string>();
+            editModesOfScenes = new List<bool>();
+            newNames = new List<string>();
+        }
+
+        void Awake()
+        {
+
+        }
+
+
+        GUIStyle styleHelpboxInner;
+        GUIStyle titleLabel, editorAddedButtonStyle, normalButtonStyle, helpButtonStyle;
+        Texture editButtonIcon, saveButtonIcon;
+        void InitStyles()
+        {
+            styleHelpboxInner = new GUIStyle("HelpBox");
+            styleHelpboxInner.padding = new RectOffset(6, 6, 6, 6);
+
+            titleLabel = new GUIStyle();
+            titleLabel.fontSize = 10;
+            titleLabel.normal.textColor = Color.white;
+            titleLabel.alignment = TextAnchor.UpperCenter;
+            titleLabel.fixedHeight = 15;
+
+            helpButtonStyle = new GUIStyle(GUI.skin.button);
+            helpButtonStyle.fontSize = 10;
+            helpButtonStyle.fontStyle = FontStyle.Bold;
+            helpButtonStyle.normal.textColor = Color.white;
+            helpButtonStyle.alignment = TextAnchor.MiddleCenter;
+
+            editorAddedButtonStyle = new GUIStyle(GUI.skin.button);
+            editorAddedButtonStyle.alignment = TextAnchor.MiddleLeft;
+            editorAddedButtonStyle.normal.textColor = Color.yellow;
+
+            normalButtonStyle = new GUIStyle(GUI.skin.button);
+            normalButtonStyle.alignment = TextAnchor.MiddleLeft;
+
+        }
+        Vector2 scrollPos;
+        List<EditorSceneClass> sceneData;
+        List<string> buildSettingsSceneNames;
+        List<bool> editModesOfScenes;
+        List<string> newNames;
+        bool isEditModeOpen = false;
+        void OnGUI()
+        {
+            InitStyles();
+            styleHelpboxInner = new GUIStyle("HelpBox");
+            styleHelpboxInner.padding = new RectOffset(6, 6, 6, 6);
+            scrollPos = EditorGUILayout.BeginScrollView(scrollPos, false, false, GUILayout.Width(position.width), GUILayout.Height(position.height));
+            GUILayout.BeginHorizontal(styleHelpboxInner);
+            GUILayout.FlexibleSpace();
+            GUILayout.Label("All scenes that are in the Scenes folder", titleLabel);
+            if (GUILayout.Button(new GUIContent("?", "Shoot me an email about the issue or suggestions"), helpButtonStyle, GUILayout.MaxWidth(20), GUILayout.MaxHeight(20)))
+            {
+                Application.OpenURL("https://github.com/prashant-singh");
+            }
+            GUILayout.FlexibleSpace();
+            GUILayout.EndHorizontal();
+            GUILayout.BeginVertical(styleHelpboxInner);
+            GetSceneNames();
+            if (sceneData.Count == 0)
+                GUILayout.Label("No scenes in the Scenes folder.", titleLabel);
+            else
+                for (int count = 0; count < sceneData.Count; count++)
                 {
-                    newNames[count] = sceneData[count].sceneName;
-                    if (sceneData[count].isAddedToBuildSettings)
+                    GUILayout.BeginHorizontal();
+                    GUILayout.FlexibleSpace();
+
+                    if (!editModesOfScenes[count])
                     {
-                        if (GUILayout.Button(sceneData[count].sceneName, editorAddedButtonStyle, GUILayout.MinWidth(200), GUILayout.MaxWidth(1000), GUILayout.Height(20)))
+                        newNames[count] = sceneData[count].sceneName;
+                        if (sceneData[count].isAddedToBuildSettings)
                         {
-                        #if UNITY_5
-                            if (EditorApplication.SaveCurrentSceneIfUserWantsTo())
+                            if (GUILayout.Button(sceneData[count].sceneName, editorAddedButtonStyle, GUILayout.MinWidth(200), GUILayout.MaxWidth(1000), GUILayout.Height(20)))
                             {
-                                EditorApplication.OpenScene(sceneData[count].scenePath + "/" + sceneData[count].sceneName + ".unity");
+                            #if UNITY_5
+                                if (EditorApplication.SaveCurrentSceneIfUserWantsTo())
+                                {
+                                    EditorApplication.OpenScene(sceneData[count].scenePath + "/" + sceneData[count].sceneName + ".unity");
+                                }
+                            #endif
+                                if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
+                                {
+                                    EditorSceneManager.OpenScene(sceneData[count].scenePath + "/" + sceneData[count].sceneName + ".unity");
+                                }
                             }
-                        #endif
-                            if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
+                        }
+                        else
+                        {
+                            if (GUILayout.Button(sceneData[count].sceneName, normalButtonStyle, GUILayout.MinWidth(200), GUILayout.MaxWidth(1000), GUILayout.Height(20)))
                             {
-                                EditorSceneManager.OpenScene(sceneData[count].scenePath + "/" + sceneData[count].sceneName + ".unity");
+                            #if UNITY_5
+                                if (EditorApplication.SaveCurrentSceneIfUserWantsTo())
+                                {
+                                    EditorApplication.OpenScene(sceneData[count].scenePath + "/" + sceneData[count].sceneName + ".unity");
+                                 }
+                            #endif
+                                if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
+                                {
+                                    EditorSceneManager.OpenScene(sceneData[count].scenePath + "/" + sceneData[count].sceneName + ".unity");
+                                }
                             }
+                        }
+
+                        if (GUILayout.Button(editButtonIcon, normalButtonStyle, GUILayout.Width(30), GUILayout.Height(20)))
+                        {
+                            newNames[count] = sceneData[count].sceneName;
+                            editModesOfScenes[count] = true;
+                            ResetAllEditings(count);
+                            isEditModeOpen = true;
                         }
                     }
                     else
                     {
-                        if (GUILayout.Button(sceneData[count].sceneName, normalButtonStyle, GUILayout.MinWidth(200), GUILayout.MaxWidth(1000), GUILayout.Height(20)))
+
+                        newNames[count] = GUILayout.TextField(newNames[count], GUILayout.Width(200), GUILayout.Height(20));
+                        if (GUILayout.Button(saveButtonIcon, GUILayout.Width(30), GUILayout.Height(20)))
                         {
-                        #if UNITY_5
-                            if (EditorApplication.SaveCurrentSceneIfUserWantsTo())
+                            var dirInfo = new DirectoryInfo(Application.dataPath + "/Scenes");
+                            var allFileInfos = dirInfo.GetFiles("*.unity", SearchOption.AllDirectories);
+                            foreach (var fileInfo in allFileInfos)
                             {
-                                EditorApplication.OpenScene(sceneData[count].scenePath + "/" + sceneData[count].sceneName + ".unity");
-                             }
-                        #endif
-                            if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
-                            {
-                                EditorSceneManager.OpenScene(sceneData[count].scenePath + "/" + sceneData[count].sceneName + ".unity");
+                                if (fileInfo.Name.Equals(sceneData[count].sceneName + ".unity"))
+                                {
+                                    AssetDatabase.RenameAsset("Assets/Scenes/" + sceneData[count].sceneName + ".unity", newNames[count]);
+                                    AssetDatabase.Refresh();
+                                    editModesOfScenes[count] = false;
+                                    isEditModeOpen = false;
+
+                                }
                             }
                         }
                     }
-
-                    if (GUILayout.Button(editButtonIcon, normalButtonStyle, GUILayout.Width(30), GUILayout.Height(20)))
-                    {
-                        newNames[count] = sceneData[count].sceneName;
-                        editModesOfScenes[count] = true;
-                        ResetAllEditings(count);
-                        isEditModeOpen = true;
-                    }
+                    GUILayout.FlexibleSpace();
+                    GUILayout.EndHorizontal();
                 }
-                else
-                {
 
-                    newNames[count] = GUILayout.TextField(newNames[count], GUILayout.Width(200), GUILayout.Height(20));
-                    if (GUILayout.Button(saveButtonIcon, GUILayout.Width(30), GUILayout.Height(20)))
-                    {
-                        var dirInfo = new DirectoryInfo(Application.dataPath + "/Scenes");
-                        var allFileInfos = dirInfo.GetFiles("*.unity", SearchOption.AllDirectories);
-                        foreach (var fileInfo in allFileInfos)
-                        {
-                            if (fileInfo.Name.Equals(sceneData[count].sceneName + ".unity"))
-                            {
-                                AssetDatabase.RenameAsset("Assets/Scenes/" + sceneData[count].sceneName + ".unity", newNames[count]);
-                                AssetDatabase.Refresh();
-                                editModesOfScenes[count] = false;
-                                isEditModeOpen = false;
-
-                            }
-                        }
-                    }
-                }
-                GUILayout.FlexibleSpace();
-                GUILayout.EndHorizontal();
-            }
-
-        GUILayout.EndVertical();
-        GUILayout.EndScrollView();
-    }
-
-    void ResetAllEditings(int tempCount)
-    {
-        for (int count = 0; count < editModesOfScenes.Count; count++)
-        {
-            if (count != tempCount)
-                editModesOfScenes[count] = false;
+            GUILayout.EndVertical();
+            GUILayout.EndScrollView();
         }
-    }
 
-    void GetSceneNames()
-    {
-        editButtonIcon = Resources.Load("toolPencil") as Texture;
-        saveButtonIcon = Resources.Load("save") as Texture;
-        if (isEditModeOpen)
-            return;
-        string folderName = Application.dataPath + "/Scenes";
+        void ResetAllEditings(int tempCount)
+        {
+            for (int count = 0; count < editModesOfScenes.Count; count++)
+            {
+                if (count != tempCount)
+                    editModesOfScenes[count] = false;
+            }
+        }
+
+        void GetSceneNames()
+        {
+            editButtonIcon = Resources.Load("toolPencil") as Texture;
+            saveButtonIcon = Resources.Load("save") as Texture;
+            if (isEditModeOpen)
+                return;
+            string folderName = Application.dataPath + "/Scenes";
         
-        if (Directory.Exists(Application.dataPath+"/Scenes"))
-        {
-            try
+            if (Directory.Exists(Application.dataPath+"/Scenes"))
             {
-                var dirInfo = new DirectoryInfo(folderName);
-                var allFileInfos = dirInfo.GetFiles("*.unity", SearchOption.AllDirectories);
+                try
+                {
+                    var dirInfo = new DirectoryInfo(folderName);
+                    var allFileInfos = dirInfo.GetFiles("*.unity", SearchOption.AllDirectories);
 
-                sceneData.Clear();
-                editModesOfScenes.Clear();
-                newNames.Clear();
-                foreach (var fileInfo in allFileInfos)
-                {
-                    EditorSceneClass tempData = new EditorSceneClass();
-                    tempData.sceneName = getSceneName(fileInfo.Name);
-                    //string[] newStringCOl = fileInfo.DirectoryName.Split(new String[] { "/Scenes/" }, StringSplitOptions.None);
-                    tempData.scenePath = fileInfo.DirectoryName;
-                    tempData.isAddedToBuildSettings = false;
-                    sceneData.Add(tempData);
-                    editModesOfScenes.Add(false);
-                    newNames.Add("0");
-                }
-                //   try
-                //    {
-                //        sceneData.Sort();
-                //    }
-                //    catch (System.Exception ex)
-                //    {
-                //       Debug.Log(ex);
-                //    }
-
-                buildSettingsSceneNames.Clear();
-                for (int count = 0; count < EditorBuildSettings.scenes.Length; count++)
-                {
-                    string tempNamSSS = EditorBuildSettings.scenes[count].path;
-                    string[] newStringCOl = tempNamSSS.Split('/');
-                    buildSettingsSceneNames.Add(getSceneName(newStringCOl[newStringCOl.Length - 1]));
-                }
-                for (int sceneCount = 0; sceneCount < sceneData.Count; sceneCount++)
-                {
-                    for (int count = 0; count < buildSettingsSceneNames.Count; count++)
+                    sceneData.Clear();
+                    editModesOfScenes.Clear();
+                    newNames.Clear();
+                    foreach (var fileInfo in allFileInfos)
                     {
-                        if (sceneData[sceneCount].sceneName.Equals(buildSettingsSceneNames[count]))
+                        EditorSceneClass tempData = new EditorSceneClass();
+                        tempData.sceneName = getSceneName(fileInfo.Name);
+                        //string[] newStringCOl = fileInfo.DirectoryName.Split(new String[] { "/Scenes/" }, StringSplitOptions.None);
+                        tempData.scenePath = fileInfo.DirectoryName;
+                        tempData.isAddedToBuildSettings = false;
+                        sceneData.Add(tempData);
+                        editModesOfScenes.Add(false);
+                        newNames.Add("0");
+                    }
+                    //   try
+                    //    {
+                    //        sceneData.Sort();
+                    //    }
+                    //    catch (System.Exception ex)
+                    //    {
+                    //       Debug.Log(ex);
+                    //    }
+
+                    buildSettingsSceneNames.Clear();
+                    for (int count = 0; count < EditorBuildSettings.scenes.Length; count++)
+                    {
+                        string tempNamSSS = EditorBuildSettings.scenes[count].path;
+                        string[] newStringCOl = tempNamSSS.Split('/');
+                        buildSettingsSceneNames.Add(getSceneName(newStringCOl[newStringCOl.Length - 1]));
+                    }
+                    for (int sceneCount = 0; sceneCount < sceneData.Count; sceneCount++)
+                    {
+                        for (int count = 0; count < buildSettingsSceneNames.Count; count++)
                         {
-                            sceneData[sceneCount].isAddedToBuildSettings = true;
+                            if (sceneData[sceneCount].sceneName.Equals(buildSettingsSceneNames[count]))
+                            {
+                                sceneData[sceneCount].isAddedToBuildSettings = true;
+                            }
                         }
                     }
                 }
+                catch (System.Exception ex)
+                {
+                    Debug.LogWarning(ex);
+                }
             }
-            catch (System.Exception ex)
+            else
             {
-                Debug.LogWarning(ex);
+                sceneData.Clear();
             }
-        }
-        else
-        {
-            sceneData.Clear();
-        }
        
+        }
+
+
+
+        string getSceneName(string tempName)
+        {
+            string extName = ".unity";
+            int index1 = tempName.IndexOf(extName);
+            string result2 = tempName.Remove(index1);
+            return result2;
+        }
+
     }
-
-
-
-    string getSceneName(string tempName)
-    {
-        string extName = ".unity";
-        int index1 = tempName.IndexOf(extName);
-        string result2 = tempName.Remove(index1);
-        return result2;
-    }
-
 }
