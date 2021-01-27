@@ -2,9 +2,7 @@
 using UnityEditor;
 using System.IO;
 using System.Collections.Generic;
-#if UNITY_5_3 || UNITY_2017
-    using UnityEditor.SceneManagement;
-#endif
+using UnityEditor.SceneManagement;
 
 namespace myEditorScripts
 {
